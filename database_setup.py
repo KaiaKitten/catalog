@@ -45,7 +45,7 @@ class Book(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
     
-     @property
+    @property
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
@@ -56,6 +56,6 @@ class Book(Base):
             'picture': self.course,
         }
     
-engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine('sqlite:///bookcatalog.db')
 
 Base.metadata.create_all(engine)
