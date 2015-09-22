@@ -23,9 +23,17 @@ class Author(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
     
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
+    
 # Table to hold books categorize by author
-class Books(Base):
-    __tablename__ = 'books'
+class Book(Base):
+    __tablename__ = 'book'
     
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
@@ -36,6 +44,17 @@ class Books(Base):
     author = relationship(Author)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
+    
+     @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+            'description': self.description,
+            'price': self.price,
+            'picture': self.course,
+        }
     
 engine = create_engine('sqlite:///restaurantmenuwithusers.db')
 
