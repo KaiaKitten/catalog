@@ -45,7 +45,7 @@ class Book(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
     
-     @property
+    @property
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
