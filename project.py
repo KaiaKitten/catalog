@@ -35,10 +35,22 @@ def editAuthor(author_id):
     if request.method == 'POST':
         if request.form['name']:
             editedAuthor.name = request.form['name']
-            flash('Author Successfully Edited %s' % editedAuthor.name)
+            flash('Author Successfully Edited: %s' % editedAuthor.name)
             return redirect(url_for('showAuthors'))
     else:
         return render_template('editAuthor.html', author=editedAuthor)
+        
+@app.route('/author/<int:author_id>/delete', methods=['GET', 'POST'])
+def deleteAuthor(author_id):
+    authorDelete = session.query(
+        Author).filter_by(id=author_id).one()
+    if request.method == 'POST':
+        session.delete(authorDelete)
+        flash('Author Successfully Removed: %s' % authorDelete.name)
+        session.commit()
+        return redirect(url_for('showAuthors', author_id=author_id))
+    else:
+        return render_template('deleteAuthor.html', author=authorDelete)
     
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
