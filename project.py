@@ -27,6 +27,18 @@ def newAuthor():
         return redirect(url_for('showAuthors'))
     else:
         return render_template('newAuthor.html')
+        
+@app.route('/author/<int:author_id>/edit', methods=['GET', 'POST'])        
+def editAuthor(author_id):
+    editedAuthor = session.query(
+        Author).filter_by(id=author_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedAuthor.name = request.form['name']
+            flash('Author Successfully Edited %s' % editedAuthor.name)
+            return redirect(url_for('showAuthors'))
+    else:
+        return render_template('editAuthor.html', author=editedAuthor)
     
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

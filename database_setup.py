@@ -56,6 +56,6 @@ class Book(Base):
             'picture': self.course,
         }
     
-engine = create_engine('sqlite:///bookcatalog.db')
+engine = create_engine('sqlite:///restaurantmenuwithusers.db')
 
 Base.metadata.create_all(engine)
