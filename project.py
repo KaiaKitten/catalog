@@ -30,8 +30,7 @@ def newAuthor():
         
 @app.route('/author/<int:author_id>/edit', methods=['GET', 'POST'])        
 def editAuthor(author_id):
-    editedAuthor = session.query(
-        Author).filter_by(id=author_id).one()
+    editedAuthor = session.query(Author).filter_by(id=author_id).one()
     if request.method == 'POST':
         if request.form['name']:
             editedAuthor.name = request.form['name']
@@ -51,7 +50,14 @@ def deleteAuthor(author_id):
         return redirect(url_for('showAuthors', author_id=author_id))
     else:
         return render_template('deleteAuthor.html', author=authorDelete)
-    
+
+@app.route('/author/<int:author_id>/')
+@app.route('/author/<int:author_id>/books/')        
+def showBooks(author_id):
+    author = session.query(Author).filter_by(id=author_id).one()
+    books = session.query(Book).filter_by(author_id=author_id).all()
+    return render_template('books.html', books=books, author=author)
+       
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
