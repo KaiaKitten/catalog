@@ -58,7 +58,8 @@ def showBooks(author_id):
     books = session.query(Book).filter_by(author_id=author_id).all()
     return render_template('books.html', books=books, author=author)
     
-@app.route('/author/<int:author_id>/books/<int:book_id>/delete', methods=['GET', 'POST'])
+@app.route('/author/<int:author_id>/books/<int:book_id>/delete', 
+           methods=['GET', 'POST'])
 def deleteBook(author_id, book_id):
     authorDelete = session.query(Author).filter_by(id=author_id).one()
     bookDelete = session.query(Book).filter_by(id=book_id).one()
@@ -68,9 +69,29 @@ def deleteBook(author_id, book_id):
         flash('Author Successfully Removed: %s' % authorDelete.name)
         return redirect(url_for('showBooks', author_id=author_id))
     else:
-        return render_template('deleteBook.html', author=authorDelete, book=bookDelete)
+        return render_template('deleteBook.html', author=authorDelete, 
+                               book=bookDelete)
+        
+@app.route('/author/<int:author_id>/books/<int:book_id>/edit', 
+           methods=['GET', 'POST'])        
+def editBook(author_id, book_id):
+    editedAuthor = session.query(Author).filter_by(id=author_id).one()
+    editedBook = session.query(Book).filter_by(id=book_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedBook.name = request.form['name']
+        if request.form['description']:
+            editedBook.description = request.form['description']
+        if request.form['price']:
+            editedBook.price = request.form['price']
+        session.add(editedBook)
+        session.commit()
+        flash('Book Successfully Edited: %s' % editedBook.name)
+        return redirect(url_for('showBooks', author_id=author_id))        
+    else:
+        return render_template('editBook.html', author=editedAuthor,
+                               book=editedBook)
 
-       
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
