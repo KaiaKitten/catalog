@@ -79,7 +79,7 @@ def deleteBook(author_id, book_id):
     if request.method == 'POST':
         session.delete(bookDelete)
         session.commit()
-        flash('Author Successfully Removed: %s' % authorDelete.name)
+        flash('Book Successfully Removed: %s' % bookDelete.name)
         return redirect(url_for('showBooks', author_id=author_id))
     else:
         return render_template('deleteBook.html', author=authorDelete, 
