@@ -58,6 +58,19 @@ def showBooks(author_id):
     books = session.query(Book).filter_by(author_id=author_id).all()
     return render_template('books.html', books=books, author=author)
     
+@app.route('/author/<int:author_id>/books/new', methods=['GET', 'POST'])                                 
+def newBook(author_id):
+    author = session.query(Author).filter_by(id=author_id).one()
+    if request.method == 'POST':
+        newBook = Book(name=request.form['name'], description=request.form['description'], price='$'+request.form['price'],  author_id=author_id)
+        session.add(newBook)
+        session.commit()
+        flash('New Book %s Successfully Added' % newBook.name)
+        return redirect(url_for('showBooks', author_id=author_id))
+    else:
+        return render_template('newBook.html', author=author)
+    
+    
 @app.route('/author/<int:author_id>/books/<int:book_id>/delete', 
            methods=['GET', 'POST'])
 def deleteBook(author_id, book_id):

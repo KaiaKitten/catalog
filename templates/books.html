@@ -28,6 +28,13 @@
     {% endwith %}
   </div>
   <hr>
+  <div class="input-group-btn btn-group">
+  <a href="{{url_for('newBook', author_id = author.id)}}" class="col-md-2">
+      <button class="btn btn-default" id="new-author">
+	      <span class="fa fa-plus" aria-hidden="true"></span>  Add Book
+      </button>
+  </a>
+  </div>
   {% if items !=[] %}
     {% for book in books %}
       <div class="col-md-4">
@@ -54,6 +61,6 @@
         </div>
       </div>
     {% endfor %}
-  {%endif %}
+  {% endif %}
 
 {% endblock %}

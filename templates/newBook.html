@@ -1,0 +1,44 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class='container'>
+  <div class="jumbotron">
+			<center><h1>Add Book</h1></center>
+			<center><p>Use this form to add a new book.<p></center>
+	</div>
+	<hr>
+	<div class="col-md-6 col-md-offset-3 padding-top">
+	  <div class="well">
+      <form action="{{url_for('newBook', author_id = author.id)}}" method = "post" class="form-horizontal">
+	      <div class="form-group">
+	        <label for="name" class="col-lg-2 control-label">Name:</label>
+	        <div class="col-lg-10">
+	          <input type ="text" class="form-control" maxlength="100" name="name" value="" required="required">
+	        </div>
+	        
+	        <label for="description" class="col-lg-2 control-label">Description:</label>
+	        <div class="col-lg-10">
+	          <textarea class="form-control" rows ="3" maxlength="250" name="description" required="required"></textarea>
+	        </div>
+	        
+	        <label for="price" class="col-lg-2 control-label">Price:</label>
+	        <div class="col-lg-10">
+	          <input type ="number" class="form-control" maxlength="100" name="price" value="" required="required">
+	        </div>
+	      </div>
+	      
+	      <center><div class="form-group">
+          <button type="submit" class="btn btn-default" id="submit" type="submit">
+            <span class="fa fa-plus" aria-hidden="true"></span>  Add
+          </button>
+          <a href = "{{url_for('showBooks', author_id = author.id)}}">
+					  <button type="button" class="btn btn-default">
+					    <span class="fa fa-times" aria-hidden="true"></span> Cancel
+					  </button>
+				  </a>
+	      </div></center>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
