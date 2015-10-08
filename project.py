@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Author, Book, User
+import json
 
 app = Flask(__name__)
 
@@ -10,6 +11,23 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+@app.route('/author/JSON')
+def authorListJSON():
+    authors = session.query(Author).all()
+    return jsonify(authors=[author.serialize for author in authors])
+
+@app.route('/author/<int:author_id>/books/JSON')
+def bookListJSON(author_id):
+    author = session.query(Author).filter_by(id=author_id).one()
+    books = session.query(Book).filter_by(
+        author_id=author_id).all()
+    return jsonify(books=[book.serialize for book in books])
+
+@app.route('/author/<int:author_id>/books/<int:book_id>/JSON')
+def bookJSON(author_id, book_id):
+    book = session.query(Book).filter_by(id=book_id).one()
+    return jsonify(book=book.serialize)
 
 @app.route('/')
 @app.route('/author/')

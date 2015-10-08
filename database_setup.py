@@ -53,7 +53,7 @@ class Book(Base):
             'id': self.id,
             'description': self.description,
             'price': self.price,
-            'picture': self.course,
+            'picture': self.picture,
         }
     
 engine = create_engine('sqlite:///catalog.db')
