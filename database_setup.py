@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, REAL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -38,7 +38,7 @@ class Book(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     description = Column(String(250))
-    price = Column(String(8))
+    price = Column(REAL)
     picture = Column(String(250))
     author_id = Column(Integer, ForeignKey('author.id'))
     author = relationship(Author)
@@ -56,6 +56,6 @@ class Book(Base):
             'picture': self.course,
         }
     
-engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine('sqlite:///catalog.db')
 
 Base.metadata.create_all(engine)

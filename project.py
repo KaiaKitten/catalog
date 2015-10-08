@@ -5,7 +5,7 @@ from database_setup import Base, Author, Book, User
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -62,7 +62,7 @@ def showBooks(author_id):
 def newBook(author_id):
     author = session.query(Author).filter_by(id=author_id).one()
     if request.method == 'POST':
-        newBook = Book(name=request.form['name'], description=request.form['description'], price='$'+request.form['price'],  author_id=author_id)
+        newBook = Book(name=request.form['name'], description=request.form['description'], price=request.form['price'],  author_id=author_id)
         session.add(newBook)
         session.commit()
         flash('New Book %s Successfully Added' % newBook.name)
