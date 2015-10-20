@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, REAL
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy import create_engine
 
 Base = declarative_base()
@@ -41,7 +41,7 @@ class Book(Base):
     price = Column(REAL)
     picture = Column(String(250))
     author_id = Column(Integer, ForeignKey('author.id'))
-    author = relationship(Author)
+    author = relationship(Author, backref=backref("children", cascade="all,delete"))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
     

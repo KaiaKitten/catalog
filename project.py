@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Author, Book, User
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 from oauth2client import client, crypt
+from functools import wraps
 import json, random, string, httplib2, requests
 
 # Flask Setup
@@ -80,7 +81,7 @@ def gconnect():
         return response
     
     # Store credentials in session
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Request user information
@@ -135,6 +136,15 @@ def getUserID(email):
         return user.id
     except:
         return None
+        
+def login_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in login_session:
+            return redirect(url_for('showLogin'))
+        return func(*args, **kwargs)
+    return decorated_function
+    
 
 # Clear ALL Flask session information, can only be accesed directly
 @app.route('/clearSession')
@@ -152,7 +162,7 @@ def gdisconnect():
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_token = credentials.access_token
+    access_token = credentials
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
@@ -204,11 +214,9 @@ def showAuthors():
     else:
         return render_template('authors.html', authors = authors)
 
-# Page for adding new author
 @app.route('/author/new/', methods=['GET', 'POST'])
+@login_required
 def newAuthor():
-    if 'username' not in login_session:
-        return redirect('/login')
     if request.method == 'POST':
         newAuthor = Author(name=request.form['name'],
                            user_id=login_session['user_id'])
@@ -222,10 +230,9 @@ def newAuthor():
 
 # Page for editing author
 @app.route('/author/<int:author_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editAuthor(author_id):
     editedAuthor = session.query(Author).filter_by(id=author_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if editedAuthor.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit this author. Please create your own author in order to edit.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
@@ -239,11 +246,10 @@ def editAuthor(author_id):
 
 # Page for deleting author
 @app.route('/author/<int:author_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteAuthor(author_id):
     authorDelete = session.query(
         Author).filter_by(id=author_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if authorDelete.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete this author. Please create your own author in order to delete.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
@@ -269,10 +275,9 @@ def showBooks(author_id):
 
 # Page to add new book by author
 @app.route('/author/<int:author_id>/books/new', methods=['GET', 'POST'])
+@login_required
 def newBook(author_id):
     author = session.query(Author).filter_by(id=author_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if author.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to add to this author. Please create your own author in order to add books.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
@@ -291,11 +296,10 @@ def newBook(author_id):
 # Page to delete book by author
 @app.route('/author/<int:author_id>/books/<int:book_id>/delete',
            methods=['GET', 'POST'])
+@login_required
 def deleteBook(author_id, book_id):
     authorDelete = session.query(Author).filter_by(id=author_id).one()
     bookDelete = session.query(Book).filter_by(id=book_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if authorDelete.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete from this author. Please create your own author in order to delete books.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
@@ -311,11 +315,10 @@ def deleteBook(author_id, book_id):
 # Page to edit book by author
 @app.route('/author/<int:author_id>/books/<int:book_id>/edit',
            methods=['GET', 'POST'])
+@login_required
 def editBook(author_id, book_id):
     editedAuthor = session.query(Author).filter_by(id=author_id).one()
     editedBook = session.query(Book).filter_by(id=book_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if editedAuthor.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit books by this author. Please create your own author in order to edit books.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
