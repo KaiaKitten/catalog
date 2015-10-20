@@ -19,7 +19,7 @@ Fill database with example information (Optional):
 
 Usage
 -----
-Simply run the `python project.py` file and direct your browser to the domain assigned (defualt: localhost:8000)
+Simply run `python project.py` and direct your browser to the domain assigned (defualt: localhost:8000)
 
 Credits
 -------
