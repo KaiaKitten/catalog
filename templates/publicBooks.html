@@ -5,16 +5,6 @@
   <div class="jumbotron">
     <center><h1>{{author.name}}</h1></center>
     <center><p>List of books by {{author.name}}.</p><center>
-    <a href="{{url_for('editAuthor', author_id = author.id )}}">
-			<button class="btn btn-default">
-				<span class="fa fa-pencil" aria-hidden="true"></span>  Edit Author
-			</button>
-		</a>
-		<a href="{{url_for('deleteAuthor', author_id = author.id )}}">
-			<button class="btn btn-default">
-				<span class="fa fa-trash" aria-hidden="true"></span>  Delete Author
-			</button>
-		</a>
   </div>
   <div class = 'flash'>
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -29,13 +19,6 @@
     {% endwith %}
   </div>
   <hr>
-  <div class="input-group-btn btn-group">
-  <a href="{{url_for('newBook', author_id = author.id)}}" class="col-md-2">
-      <button class="btn btn-default" id="new-author">
-	      <span class="fa fa-plus" aria-hidden="true"></span>  Add Book
-      </button>
-  </a>
-  </div>
   {% if items !=[] %}
     {% for book in books %}
       <div class="col-md-4">
@@ -49,14 +32,6 @@
           <div class="panel-footer">
             <div class="input-group">
               <strong>${{book.price}}</strong>
-              <div class="input-group-btn btn-group btn-group-justified">
-                <a href="{{url_for('editBook', author_id = author.id, book_id = book.id)}}" class="btn btn-default">
-                    <span class="fa fa-pencil" aria-hidden="true"></span>
-                </a>
-                <a href="{{url_for('deleteBook', author_id = author.id, book_id = book.id)}}" class="btn btn-default">
-                    <span class="fa fa-trash" aria-hidden="true"></span>
-                </a>
-              </div>
             </div>
           </div>
         </div>

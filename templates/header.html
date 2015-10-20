@@ -1,7 +1,16 @@
 <nav class="navbar navbar-fixed-top navbar-inverse">
   <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="{{url_for('showAuthors')}}">Catalog</a>
+        <a class="navbar-brand" href="{{url_for('showAuthors')}}"> <i class="fa fa-home"></i> Catalog</a>
       </div>
+      <ul class="nav navbar-nav navbar-right">
+        {% if not session.username %}
+        <li><a href="{{url_for('showLogin')}}">Login  <span class="fa fa-sign-in"></span></a></li>
+        {% endif %}
+        {% if session.username %}
+        <p class="navbar-text"><font color="FFFFFF">Welcome, {{session.username}}</font></p> 
+        <li><a href="{{url_for('gdisconnect')}}">Log Out  <span class="fa fa-sign-out"></span></a></li>
+        {% endif %}
+      </ul>
   </div>
 </nav>
