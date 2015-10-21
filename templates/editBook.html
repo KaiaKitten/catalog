@@ -16,6 +16,11 @@
 	          <input type ="text" class="form-control" maxlength="100" name="name" value="{{book.name}}" required="required">
 	        </div>
 	        
+	         <label for="picture" class="col-lg-2 control-label">Picture:</label>
+	        <div class="col-lg-10">
+	          <input type ="url" class="form-control" pattern="^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|gif|png)$" name="picture" value="{{book.picture}}">
+	        </div>
+	        
 	        <label for="description" class="col-lg-2 control-label">Description:</label>
 	        <div class="col-lg-10">
 	          <textarea class="form-control" rows ="3" maxlength="250" name="description" required="required">{{book.description}}</textarea>

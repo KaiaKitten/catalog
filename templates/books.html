@@ -1,6 +1,11 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({ html : true });   
+});
+</script>
 <div class='container'>
   <div class="jumbotron">
     <center><h1>{{author.name}}</h1></center>
@@ -41,7 +46,20 @@
       <div class="col-md-4">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title">{{book.name}}</h3>
+              <div class="input-group">
+                <h3 class="panel-title">{{book.name}}</h3>
+                <div class="input-group-btn btn-group">
+                {% if book.picture %}
+                <button type="button" class="btn btn-default btn-xs" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<img src='{{book.picture}}' height='200'>" data-original-title="" title="" aria-describedby="popover247227">
+                    <span class="fa fa-picture-o"></span>  Cover
+                </button>
+                {% else %}
+                 <a href="{{url_for('editBook', author_id = author.id, book_id = book.id)}}">
+                    <button type="button" class="btn btn-default btn-xs"><span class="fa fa-plus">  Cover </button>
+                 </a>
+                {% endif %}
+                </div>
+              </div>
           </div>        
           <div class="panel-body">
             {{book.description}}  
