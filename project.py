@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import jsonify, session as login_session, make_response
 from flask.ext.seasurf import SeaSurf
+from dicttoxml import dicttoxml
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Author, Book, User
@@ -14,7 +15,6 @@ app = Flask(__name__)
 
 csrf = SeaSurf()
 csrf.init_app(app)
-
 
 # Client ID for Google Oauth
 CLIENT_ID = json.loads(
@@ -189,7 +189,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-# JSON author List endpoint
+# JSON author list endpoint
 @app.route('/author/JSON')
 def authorListJSON():
     authors = session.query(Author).all()
@@ -208,6 +208,29 @@ def bookListJSON(author_id):
 def bookJSON(author_id, book_id):
     book = session.query(Book).filter_by(id=book_id).one()
     return jsonify(book=book.serialize)
+
+# XML author list information endpoint    
+@app.route('/author/XML')
+def authorListXML():
+    authors = session.query(Author).all()
+    authorslist = [author.serialize for author in authors]
+    return dicttoxml(authorslist)
+    
+# XML book list endpoint
+@app.route('/author/<int:author_id>/books/XML')
+def bookListXML(author_id):
+    author = session.query(Author).filter_by(id=author_id).one()
+    books = session.query(Book).filter_by(
+        author_id=author_id).all()
+    bookslist = [book.serialize for book in books]
+    return dicttoxml(bookslist)
+    
+# XML book information endpoint
+@app.route('/author/<int:author_id>/books/<int:book_id>/XML')
+def bookXML(author_id, book_id):
+    book = session.query(Book).filter_by(id=book_id).one()
+    booklist = book.serialize
+    return dicttoxml(booklist)
 
 # Main page, List of authors
 @app.route('/')
