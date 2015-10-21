@@ -22,7 +22,7 @@ author1 = Author(user_id=1, name = "Jules Verne")
 session.add(author1)
 session.commit()
 
-book1 = Book(user_id=1, name = "Around the World in 80 days", description = "Donec arcu tellus, laoreet ac ornare ut, pharetra quis orci. Donec id eros eget massa tincidunt volutpat. Sed eget sodales arcu. Proin a hendrerit dolor. Vivamus ac tempus dui. Maecenas rutrum ultricies lacus ac dapibus. Pellentesque id cursus metus.", price = "5.99", author = author1)
+book1 = Book(user_id=1, name = "Around the World in 80 days", description = "Donec arcu tellus, laoreet ac ornare ut, pharetra quis orci. Donec id eros eget massa tincidunt volutpat. Sed eget sodales arcu. Proin a hendrerit dolor. Vivamus ac tempus dui. Maecenas rutrum ultricies lacus ac dapibus. Pellentesque id cursus metus.",picture="https://upload.wikimedia.org/wikipedia/commons/8/86/Verne_Tour_du_Monde.jpg", price = "5.99", author = author1)
 
 session.add(book1)
 session.commit()
@@ -32,7 +32,7 @@ book2 = Book(user_id=1, name = "To the Moon and Back", description = "Integer el
 session.add(book2)
 session.commit()
 
-book3 = Book(user_id=1, name ="Journy to the Center of the Earth", description = "Vivamus vulputate nisl nec diam placerat maximus vel vitae nulla. Duis rutrum orci finibus aliquam aliquet. Duis ac metus nisl. Mauris non luctus enim. In sit amet cursus dui. Etiam sagittis elit felis, non pellentesque enim rutrum vel. Praesent sed.", price = "6.50", author = author1)
+book3 = Book(user_id=1, name ="Journy to the Center of the Earth", description = "Vivamus vulputate nisl nec diam placerat maximus vel vitae nulla. Duis rutrum orci finibus aliquam aliquet. Duis ac metus nisl. Mauris non luctus enim. In sit amet cursus dui. Etiam sagittis elit felis, non pellentesque enim rutrum vel. Praesent sed.", price = "6.50", picture="https://upload.wikimedia.org/wikipedia/commons/6/67/A_Journey_to_the_Centre_of_the_Earth-1874.jpg", author = author1)
 
 session.add(book3)
 session.commit()

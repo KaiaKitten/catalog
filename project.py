@@ -234,7 +234,7 @@ def newAuthor():
 def editAuthor(author_id):
     editedAuthor = session.query(Author).filter_by(id=author_id).one()
     if editedAuthor.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit this author. Please create your own author in order to edit.');}</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized to edit this author. Please create your own author in order to edit.');history.back();}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         if request.form['name']:
             editedAuthor.name = request.form['name']
@@ -251,7 +251,7 @@ def deleteAuthor(author_id):
     authorDelete = session.query(
         Author).filter_by(id=author_id).one()
     if authorDelete.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete this author. Please create your own author in order to delete.');}</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized to delete this author. Please create your own author in order to delete.');history.back();}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(authorDelete)
         session.commit()
@@ -279,9 +279,10 @@ def showBooks(author_id):
 def newBook(author_id):
     author = session.query(Author).filter_by(id=author_id).one()
     if author.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to add to this author. Please create your own author in order to add books.');}</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized to add to this author. Please create your own author in order to add books.');history.back();}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         newBook = Book(name=request.form['name'],
+                       picture=request.form['picture'],
                        description=request.form['description'],
                        price=request.form['price'],
                        author_id=author_id,
@@ -301,7 +302,7 @@ def deleteBook(author_id, book_id):
     authorDelete = session.query(Author).filter_by(id=author_id).one()
     bookDelete = session.query(Book).filter_by(id=book_id).one()
     if authorDelete.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete from this author. Please create your own author in order to delete books.');}</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized to delete from this author. Please create your own author in order to delete books.');history.back();}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(bookDelete)
         session.commit()
@@ -320,10 +321,12 @@ def editBook(author_id, book_id):
     editedAuthor = session.query(Author).filter_by(id=author_id).one()
     editedBook = session.query(Book).filter_by(id=book_id).one()
     if editedAuthor.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit books by this author. Please create your own author in order to edit books.');}</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized to edit books by this author. Please create your own author in order to edit books.');history.back();}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         if request.form['name']:
             editedBook.name = request.form['name']
+        if request.form['picture']:
+            editedBook.picture = request.form['picture']
         if request.form['description']:
             editedBook.description = request.form['description']
         if request.form['price']:
