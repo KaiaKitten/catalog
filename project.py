@@ -36,7 +36,8 @@ def showLogin():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
-# Request token, verify, login, and store user. 
+# Request token, verify, login, and store user.
+@csrf.exempt  
 @app.route('/gconnect', methods=['GET', 'POST'])
 def gconnect():
     # verify state token to stop cross site forgery
