@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import jsonify, session as login_session, make_response
+from flask.ext.seasurf import SeaSurf
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Author, Book, User
@@ -10,6 +11,10 @@ import json, random, string, httplib2, requests
 
 # Flask Setup
 app = Flask(__name__)
+
+csrf = SeaSurf()
+csrf.init_app(app)
+
 
 # Client ID for Google Oauth
 CLIENT_ID = json.loads(

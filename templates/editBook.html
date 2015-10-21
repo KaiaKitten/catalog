@@ -11,6 +11,7 @@
 	  <div class="well">
       <form action="{{url_for('editBook',author_id = author.id, book_id = book.id,)}}" method = "post" class="form-horizontal">
 	      <div class="form-group">
+	        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 	        <label for="name" class="col-lg-2 control-label">Name:</label>
 	        <div class="col-lg-10">
 	          <input type ="text" class="form-control" maxlength="100" name="name" value="{{book.name}}" required="required">

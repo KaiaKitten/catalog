@@ -10,6 +10,7 @@
 	<div class="col-md-6 col-md-offset-3 padding-top">
 	  <div class="well">
       <form action="{{url_for('editAuthor',author_id = author.id)}}" method = "post" class="form-horizontal">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 	      <div class="form-group">
 	        <label for="name" class="col-lg-2 control-label">Name:</label>
 	        <div class="col-lg-10">

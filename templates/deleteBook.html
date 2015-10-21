@@ -7,6 +7,7 @@
 			  <h1>Remove Book: {{book.name}}</h1>
         <p> Are you sure you want to remove {{book.name}}? <p>
         <form action="#" method = 'post'>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 	        <button type="submit" class="btn btn-default" id="submit" type="submit">
 	          <span class="fa fa-trash" aria-hidden="true"></span>  Remove
 	        </button>
