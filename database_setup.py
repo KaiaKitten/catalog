@@ -8,21 +8,21 @@ Base = declarative_base()
 # Table to hold all users
 class User(Base):
     __tablename__ = 'user'
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
-    
+
 # Table to hold all authors, used to categorize books
 class Author(Base):
     __tablename__ = 'author'
-        
+
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-    
+
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -30,11 +30,11 @@ class Author(Base):
             'name': self.name,
             'id': self.id,
         }
-    
+
 # Table to hold books categorize by author
 class Book(Base):
     __tablename__ = 'book'
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     description = Column(String(250))
@@ -44,7 +44,7 @@ class Book(Base):
     author = relationship(Author, backref=backref("children", cascade="all,delete"))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-    
+
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -55,7 +55,7 @@ class Book(Base):
             'price': self.price,
             'picture': self.picture,
         }
-    
-engine = create_engine('sqlite:///catalog.db')
+
+engine = create_engine('postgresql://postgres@localhost/catalog')
 
 Base.metadata.create_all(engine)

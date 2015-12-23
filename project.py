@@ -22,7 +22,7 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "Catalog"
 
 # SQL setup
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://postgres@localhost/catalog')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -37,7 +37,7 @@ def showLogin():
     return render_template('login.html', STATE=state)
 
 # Request token, verify, login, and store user.
-@csrf.exempt  
+@csrf.exempt
 @app.route('/gconnect', methods=['GET', 'POST'])
 def gconnect():
     # verify state token to stop cross site forgery
@@ -46,11 +46,11 @@ def gconnect():
        response.headers[Content-Type] = 'application/json'
        return response
     code = request.data
-    
-    # Exchange token for credentials 
+
+    # Exchange token for credentials
     try:
         flow = flow_from_clientsecrets('client_secrets.json',
-                                       scope='openid email', 
+                                       scope='openid email',
                                        redirect_uri='postmessage')
         credentials = flow.step2_exchange(code)
     except FlowExchangeError:
@@ -64,7 +64,7 @@ def gconnect():
            % credentials.access_token)
     h = httplib2.Http()
     idinfo = json.loads(h.request(url, 'GET')[1])
-    
+
     # Check for errors, abort and report errors
     if idinfo.get('error') is not None:
         response = make_response(json.dumps(idinfo.get('error')), 500)
@@ -74,18 +74,18 @@ def gconnect():
     if idinfo['user_id'] != credentials.id_token['sub']:
         raise crypt.AppIdentityError("Wrong user.")
 
-    # Check stored credentials    
+    # Check stored credentials
     gplus_id = idinfo['user_id']
     stored_credentials = login_session.get('credentials')
     stored_id = login_session.get('gplus_id')
-    
+
     # Compare stored and current credentials, check if user is already logged in
     if stored_credentials is not None and gplus_id == stored_id:
         response = make_response(
             json.dumps('Current user is already connected.'),200)
         response.headers['Content-Type'] = 'application/json'
         return response
-    
+
     # Store credentials in session
     login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
@@ -108,7 +108,7 @@ def gconnect():
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
-    
+
     # Update page with user information
     output = ''
     output += '<h1>Welcome, '
@@ -117,7 +117,7 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("You are now logged in as %s" % login_session['username'], 
+    flash("You are now logged in as %s" % login_session['username'],
           "alert-success")
     return output
 
@@ -142,7 +142,7 @@ def getUserID(email):
         return user.id
     except:
         return None
-        
+
 def login_required(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
@@ -150,7 +150,7 @@ def login_required(func):
             return redirect(url_for('showLogin'))
         return func(*args, **kwargs)
     return decorated_function
-    
+
 
 # Clear ALL Flask session information, can only be accesed directly
 @app.route('/clearSession')
@@ -172,7 +172,7 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    
+
     # Delete session information if successful and redirect, display errors
     if result['status'] == '200':
         # Reset the user's sesson.
@@ -181,7 +181,7 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-        
+
         flash('Successfully logged out', "alert-success")
         return redirect(url_for('showAuthors'))
     else:
@@ -210,13 +210,13 @@ def bookJSON(author_id, book_id):
     book = session.query(Book).filter_by(id=book_id).one()
     return jsonify(book=book.serialize)
 
-# XML author list information endpoint    
+# XML author list information endpoint
 @app.route('/author/XML')
 def authorListXML():
     authors = session.query(Author).all()
     authorslist = [author.serialize for author in authors]
     return dicttoxml(authorslist)
-    
+
 # XML book list endpoint
 @app.route('/author/<int:author_id>/books/XML')
 def bookListXML(author_id):
@@ -225,7 +225,7 @@ def bookListXML(author_id):
         author_id=author_id).all()
     bookslist = [book.serialize for book in books]
     return dicttoxml(bookslist)
-    
+
 # XML book information endpoint
 @app.route('/author/<int:author_id>/books/<int:book_id>/XML')
 def bookXML(author_id, book_id):
@@ -251,7 +251,7 @@ def newAuthor():
                            user_id=login_session['user_id'])
         session.add(newAuthor)
         session.commit()
-        flash('New Author %s Successfully Added' % newAuthor.name, 
+        flash('New Author %s Successfully Added' % newAuthor.name,
               "alert-success")
         return redirect(url_for('showAuthors'))
     else:
@@ -267,7 +267,7 @@ def editAuthor(author_id):
     if request.method == 'POST':
         if request.form['name']:
             editedAuthor.name = request.form['name']
-            flash('Author Successfully Edited: %s' % editedAuthor.name, 
+            flash('Author Successfully Edited: %s' % editedAuthor.name,
                   "alert-success")
             return redirect(url_for('showAuthors'))
     else:
@@ -284,7 +284,7 @@ def deleteAuthor(author_id):
     if request.method == 'POST':
         session.delete(authorDelete)
         session.commit()
-        flash('Author Successfully Removed: %s' % authorDelete.name, 
+        flash('Author Successfully Removed: %s' % authorDelete.name,
               "alert-success")
         return redirect(url_for('showAuthors', author_id=author_id))
     else:
@@ -298,7 +298,7 @@ def showBooks(author_id):
     creator = getUserInfo(author.user_id)
     books = session.query(Book).filter_by(author_id=author_id).all()
     if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publicBooks.html', 
+        return render_template('publicBooks.html',
                                books=books, author=author, creator=creator)
     return render_template('books.html', books=books, author=author)
 
@@ -335,7 +335,7 @@ def deleteBook(author_id, book_id):
     if request.method == 'POST':
         session.delete(bookDelete)
         session.commit()
-        flash('Book Successfully Removed: %s' % bookDelete.name, 
+        flash('Book Successfully Removed: %s' % bookDelete.name,
               "alert-success")
         return redirect(url_for('showBooks', author_id=author_id))
     else:
@@ -373,4 +373,3 @@ if __name__ == '__main__':
     app.secret_key = 'super_secret_key' # Not recomended for producation use
     app.debug = True # Not recomended for producation use
     app.run(host='0.0.0.0', port=8000) # Port and host infromation
-

@@ -1,19 +1,19 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
- 
+
 from database_setup import Base, Author, Book, User
 
 #Script to add faux authors and books to database for testing
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://postgres@localhost/catalog')
 Base.metadata.bind = engine
- 
+
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 user1 = User(name="John Doe", email="JohnDoe@email.com",
              picture='http://i.imgur.com/1062ZiN.png')
-             
+
 session.add(user1)
 session.commit()
 
@@ -90,4 +90,3 @@ book12 = Book(user_id=1, name = "Macbeth", description = "Curabitur faucibus, ur
 
 session.add(book12)
 session.commit()
-
