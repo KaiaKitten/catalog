@@ -3,9 +3,9 @@ from sqlalchemy.orm import sessionmaker
 
 from database_setup import Base, Author, Book, User
 
-#Script to add faux authors and books to database for testing
+# Script to add faux authors and books to database for testing
 
-engine = create_engine('postgresql://postgres@localhost/catalog')
+engine = create_engine('postgresql://postgres:password@localhost/catalog')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)

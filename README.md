@@ -5,7 +5,7 @@ Website/WebApp to display a list of categories each contanting a list of items (
 Requirements
 ------------
 * Python >= 2.7
-* Flask >= 0.9 
+* Flask >= 0.9
 * Flask-Login >= 0.1.3
 * flask-seasurf >= 0.2.1
 * dicttoxml >= 1.6.6
@@ -26,9 +26,9 @@ Clone repo:
 #####Using Vagrant(Recommended)
 Using Vagrant will asure there are no "It worked on my machine" problems.
 Install vagrant [here](https://www.vagrantup.com/downloads.html)
-    
+
 Direct to the cloned repo, start up, and connect to Vagrant:
-	
+
     cd catalog
     vagrant up
     vagrant ssh
@@ -44,15 +44,15 @@ Direct to `catalog` folder.
 Install requerments with pip:
 
 	pip install -r requirements.txt
-    
+
 Continue to Setup step
 
 Setup
 -----
-Set up database: 
-	
+Set up database:
+
     python database_setup.py
-    
+
 Fill database with example information (Optional):
 
 	python lotsofbooks.py
@@ -77,3 +77,44 @@ Credits
 * Udacity for everything
 
 
+Udacity Review Info
+----
+
+Server info:
+* **IP:** 52.34.254.180
+* **SSH Port:** 2200
+* **URL:** http://52.34.254.180/author/
+
+Installed Software:
+* apache2
+* fail2ban
+* libapache2-mod-wsgi
+* pip
+* postgresql
+* virtualenv
+* git
+
+User Changes:
+* Updated software through apt
+* Add user `grader`
+* Add use `grader` to sudoers.d
+* Added `authorized_keys` for `grader`
+* added user `catalog` for accessing postgres DB
+
+Firewall:
+* Only allow incoming on ports 2200(ssh), 80(http), NTP(123)
+
+fail2ban:
+* Setup to ban multiple failed attempts to ssh port
+
+Apache:
+* Added `catalog.conf` to sites-available
+
+Other:
+* Cloned catalog app into `/var/www/catalog`
+* Made wsgi file and changed `project.py` to `__init__.py`
+* Edited `__init__.py` to reflect postgres and changed directories
+
+Resources:
+* http://www.fail2ban.org/wiki/index.php/Main_Page
+* https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps

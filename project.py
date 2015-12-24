@@ -18,11 +18,11 @@ csrf.init_app(app)
 
 # Client ID for Google Oauth
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('/var/www/catalog/catalog/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog"
 
 # SQL setup
-engine = create_engine('postgresql://postgres@localhost/catalog')
+engine = create_engine('postgresql://postgres:password@localhost/catalog')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
